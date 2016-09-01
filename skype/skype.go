@@ -7,18 +7,14 @@ import (
 	"net/url"
 )
 
-const (
-	defaultBaseURL = "https://api.skype.net/v3"
-)
-
 type Client struct {
 	client       *http.Client
-	BaseURL      *url.URL
 	ClientID     string
 	ClientSecret string
 	Token        string
 
 	Authorization *AuthorizeService
+	Messege       *MessegesService
 }
 
 type service struct {
@@ -27,9 +23,10 @@ type service struct {
 
 func NewClient(clientID, clientSecret string) *Client {
 	httpClient := http.DefaultClient
-	baseURL, _ := url.Parse(defaultBaseURL)
-	c := &Client{client: httpClient, BaseURL: baseURL, ClientID: clientID, ClientSecret: clientSecret}
+
+	c := &Client{client: httpClient, ClientID: clientID, ClientSecret: clientSecret}
 	c.Authorization = &AuthorizeService{client: c}
+	c.Messege = &MessegesService{client: c}
 
 	return c
 }
