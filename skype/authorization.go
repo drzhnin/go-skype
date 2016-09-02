@@ -18,21 +18,21 @@ type Authorization struct {
 	AccessToken  string `json:"access_token, omitempty"`
 }
 
-func (s *AuthorizeService) Authorize() (*Authorization, *Response, error) {
+func (s *AuthorizeService) Authorize() (*Response, error) {
 	bodyStr := fmt.Sprintf("client_id=%s&scope=https://graph.microsoft.com/.default&grant_type=client_credentials&client_secret=%s", s.client.ClientID, s.client.ClientSecret)
 	body := strings.NewReader(bodyStr)
 	req, err := s.client.NewRequest("POST", authURL, body)
 	req.Header.Add("content-type", "application/x-www-form-urlencoded")
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	var auth = new(Authorization)
 
 	resp, err := s.client.Do(req, auth)
 	if err != nil {
-		return nil, resp, err
+		return resp, err
 	}
-
-	return auth, resp, err
+	s.client.Token = fmt.Sprintf("%s %s", auth.TokenType, auth.AccessToken)
+	return resp, err
 }
