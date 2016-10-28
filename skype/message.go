@@ -31,7 +31,5 @@ func (s *MessegesService) Send(conversationID string, messegeType string, text s
 		return resp, err
 	}
 
-	defer resp.Body.Close()
-
 	return resp, nil
 }
