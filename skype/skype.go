@@ -64,8 +64,6 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 		return nil, err
 	}
 
-	defer resp.Body.Close()
-
 	response := newResponse(resp)
 
 	if v != nil {
@@ -78,6 +76,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*Response, error) {
 			}
 		}
 	}
+	defer resp.Body.Close()
 
 	return response, err
 }
